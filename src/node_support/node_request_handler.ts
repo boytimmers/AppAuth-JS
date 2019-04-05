@@ -13,8 +13,6 @@
  */
 
 import * as EventEmitter from 'events';
-import * as Http from 'http';
-import * as Url from 'url';
 import {AuthorizationRequest} from '../authorization_request';
 import {AuthorizationRequestHandler, AuthorizationRequestResponse} from '../authorization_request_handler';
 import {AuthorizationError, AuthorizationResponse} from '../authorization_response';
@@ -25,8 +23,8 @@ import {BasicQueryStringUtils, QueryStringUtils} from '../query_string_utils';
 import {NodeCrypto} from './crypto_utils';
 
 
-// TypeScript typings for `opener` are not correct and do not export it as module
-import opener = require('opener');
+var Http = window.require("http"); //line 30
+var Url = window.require("url"); //line 31
 
 class ServerEventsEmitter extends EventEmitter {
   static ON_UNABLE_TO_START = 'unable_to_start';
@@ -111,7 +109,7 @@ export class NodeBasedHandler extends AuthorizationRequestHandler {
           server.listen(this.httpServerPort);
           const url = this.buildRequestUrl(configuration, request);
           log('Making a request to ', request, url);
-          opener(url);
+          window.require("electron").shell.openExternal(url);
         })
         .catch((error) => {
           log('Something bad happened ', error);
